@@ -1,4 +1,4 @@
-// CSE 360 Fall 2018
+//CSE 360 Fall 2018
 
 import javax.swing.*;
 import java.awt.*;
@@ -7,31 +7,45 @@ import java.util.ArrayList;
 public class Task {
 
 	private String name;
-	private Int duration;
-	private Int dependency;
-	private String[] dependencies;
+	private int duration;
+	private String dependencies;
 
-	public Task (String name; Int duration) {
+	/*public Task(String name; int duration) {
 		this.name = name;
 		this.duration = duration;
-	}
+	}*/
 
-	public Task (String name; Int duration, Int dependency, String[] dependencies) {
-		this.name = name;
-		this.duration = duration;
-		this.dependency = dependency;
-		this.dependencies = dependencies;
+	public Task() {
+		name = new String("");
+		duration = 0;
+		dependencies = new String ("");
+		//this.name = name;
+		//this.duration = duration;
+		//this.dependency = dependency;
+		//this.dependencies = dependencies;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public String getDuration() {
-		return String(duration);
+	public int getDuration() {
+		return duration;
 	}
 
-	public String getDependencies(Int index) {
-		return dependencies[index];
+	public String getDependencies() {
+		return dependencies;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setDuration(int duration) {
+		this.duration = duration;
+	}
+
+	public void setDependencies(String dependencies) {
+		this.dependencies = dependencies;
 	}
 }
