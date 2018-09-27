@@ -1,4 +1,3 @@
-package old;
 //CSE 360 Fall 2018
 
 import java.awt.*;
