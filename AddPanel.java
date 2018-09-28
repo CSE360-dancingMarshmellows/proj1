@@ -22,21 +22,21 @@ public class AddPanel extends JPanel {
 
 		JPanel welcome = new JPanel(new GridLayout(1, 1));
 		errorMessage = new JLabel("");
-		welcome.add(new JLabel("Welcome to Task Scheduler"));
+		welcome.add(new JLabel("                                                                         Welcome to Task Scheduler"));
 		welcome.add(errorMessage);
 
 		JPanel fields = new JPanel(new GridLayout(10,1));
 		JPanel labels = new JPanel(new GridLayout(10,1));
 
-		name = new JTextField();
-		duration = new JTextField();
-		dependencies = new JTextField();
+		name = new JTextField(30);
+		duration = new JTextField(30);
+		dependencies = new JTextField(30);
 
-		labels.add(new JLabel("Enter Name of the Task"));
+		labels.add(new JLabel("           Enter Name of the Task"));
 		fields.add(name);
-		labels.add(new JLabel("Enter Duration of the Task"));
+		labels.add(new JLabel("           Enter Duration of the Task"));
 		fields.add(duration);
-		labels.add(new JLabel("Enter any Dependencies the Task Has"));
+		labels.add(new JLabel("           Enter any Dependencies the Task Has                "));
 		fields.add(dependencies);
 
 		JPanel buttons = new JPanel(new GridLayout(1, 3));
@@ -84,7 +84,7 @@ private class ButtonListener implements ActionListener {
 			}
 		}
 		catch(NumberFormatException nfe) {
-			errorMessage.setText("Please enter an integer for Task Duration.");
+			errorMessage.setText("           Please enter an integer for Task Duration.");
 			errorMessage.setForeground(Color.red);
 		}
 		catch(Exception e) {
