@@ -58,6 +58,7 @@ public class AddPanel extends JPanel {
 
 private class ButtonListener implements ActionListener {
 	public void actionPerformed(ActionEvent event) {
+		Task currTask = new Task();
 		try {
 			String taskName = name.getText();
 			int taskDur = Integer.parseInt(duration.getText());
@@ -65,7 +66,7 @@ private class ButtonListener implements ActionListener {
 
 			if (taskName.length() == 0 || taskDur == 0) {
 				Exception e = new Exception();
-				throw(e);
+				throw e;
 			}
 
 			if (taskDur < 0 ) {
@@ -74,13 +75,20 @@ private class ButtonListener implements ActionListener {
 			}
 
 			else {
-				Task task1 = new Task();
-				task1.setName(taskName);
-				task1.setDuration(taskDur);
+				currTask.setName(taskName);
+				name.setText("");
+				currTask.setDuration(taskDur);
+				duration.setText("");
 				if (taskDep.length() != 0) {
-					task1.setDependencies(taskDep);
+					currTask.setDependencies(taskDep);
 				}
-				taskList.add(task1);
+				else {
+					currTask.setDependencies(" ");
+				}
+				dependencies.setText("");
+				taskList.add(currTask);
+				viewPanel.addTask(currTask);
+				errorMessage.setText("");
 			}
 		}
 		catch(NumberFormatException nfe) {
@@ -88,8 +96,7 @@ private class ButtonListener implements ActionListener {
 			errorMessage.setForeground(Color.red);
 		}
 		catch(Exception e) {
-			e.printStackTrace();
-			errorMessage.setText("Please enter both Task Name and Duration");
+			errorMessage.setText("           Please enter both Task Name and Duration");
 			errorMessage.setForeground(Color.red);
 		}
 	}
