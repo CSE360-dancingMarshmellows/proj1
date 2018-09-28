@@ -48,4 +48,9 @@ public class Task {
 	public void setDependencies(String dependencies) {
 		this.dependencies = dependencies;
 	}
+	
+	public String toString() {
+		String result = "Task Name: " + name + "    Task Duration: " + Integer.toString(duration) + "    Task Dependencies: " + dependencies; 
+		return result;
+	}
 }
