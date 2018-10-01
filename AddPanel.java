@@ -1,3 +1,4 @@
+
 //CSE 360 Fall 2018
 
 import java.awt.*;
@@ -63,7 +64,7 @@ private class ButtonListener implements ActionListener {
 			String taskName = name.getText();
 			int taskDur = Integer.parseInt(duration.getText());
 			String taskDep = dependencies.getText();
-
+			
 			if (taskName.length() == 0 || taskDur == 0) {
 				Exception e = new Exception();
 				throw e;
@@ -80,10 +81,16 @@ private class ButtonListener implements ActionListener {
 				currTask.setDuration(taskDur);
 				duration.setText("");
 				if (taskDep.length() != 0) {
-					currTask.setDependencies(taskDep);
-				}
-				else {
-					currTask.setDependencies(" ");
+					StringTokenizer st = new StringTokenizer(taskDep, " ");
+					int dep = 1;
+					String[] deps = new String[15];
+					deps[0] = st.nextToken();
+					while(st.hasMoreTokens()) {
+						deps[dep] = st.nextToken();
+						dep++;
+					}
+					currTask.setDependencies(deps, dep);
+
 				}
 				dependencies.setText("");
 				taskList.add(currTask);
