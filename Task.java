@@ -1,3 +1,4 @@
+
 //CSE 360 Fall 2018
 
 import javax.swing.*;
@@ -8,21 +9,13 @@ public class Task {
 
 	private String name;
 	private int duration;
-	private String dependencies;
-
-	/*public Task(String name; int duration) {
-		this.name = name;
-		this.duration = duration;
-	}*/
+	private String [] dependencies = {};
+	private int dependency;
 
 	public Task() {
 		name = new String("");
 		duration = 0;
-		dependencies = new String ("");
-		//this.name = name;
-		//this.duration = duration;
-		//this.dependency = dependency;
-		//this.dependencies = dependencies;
+		dependency = 0;
 	}
 
 	public String getName() {
@@ -33,7 +26,7 @@ public class Task {
 		return duration;
 	}
 
-	public String getDependencies() {
+	public String [] getDependencies() {
 		return dependencies;
 	}
 
@@ -45,12 +38,19 @@ public class Task {
 		this.duration = duration;
 	}
 
-	public void setDependencies(String dependencies) {
+	public void setDependencies(String [] dependencies, int dependency) {
 		this.dependencies = dependencies;
+		this.dependency = dependency;
 	}
 	
 	public String toString() {
-		String result = "Task Name: " + name + "    Task Duration: " + Integer.toString(duration) + "    Task Dependencies: " + dependencies; 
+		int i = 0;
+		String dep = "";
+		while (i < dependency) {
+			dep = dep + dependencies[i] + " "; 
+			i++;
+		}
+		String result = "Task Name: " + name + "    Task Duration: " + Integer.toString(duration) + "    Task Dependencies: " + dep; 
 		return result;
 	}
 }
