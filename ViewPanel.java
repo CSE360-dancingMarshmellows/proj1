@@ -1,3 +1,4 @@
+
 //CSE 360 Fall 2018
 
 import java.awt.*;
@@ -10,7 +11,6 @@ public class ViewPanel extends JPanel {
 	private JPanel allTasks;
 	private JPanel viewTasks;
 	private JButton reset;
-	private ArrayList<JLabel> taskLabels;
 
 	public ViewPanel(ArrayList<Task> taskList) {
 		this.taskList = taskList;
@@ -26,7 +26,6 @@ public class ViewPanel extends JPanel {
 
 		allTasks = new JPanel();
 		allTasks.setLayout(new BoxLayout(allTasks, BoxLayout.Y_AXIS));
-		// Tasks are listed as strings in text area
 		JScrollPane scroll = new JScrollPane(allTasks);
 		add(scroll, BorderLayout.NORTH);
 		add(viewTasks, BorderLayout.SOUTH);
@@ -35,7 +34,6 @@ public class ViewPanel extends JPanel {
 	public void addTask(Task currTask) {
 		JLabel newTask = new JLabel(currTask.toString());
 		allTasks.add(newTask);
-		taskLabels.add(newTask);
 	}
 	
 	private class ButtonListener implements ActionListener {
