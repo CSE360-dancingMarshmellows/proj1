@@ -17,7 +17,7 @@ public class TaskScheduler extends JApplet {
 		taskList = new ArrayList<Task>();
 
 		viewPanel = new ViewPanel(taskList);
-		addPanel = new AddPanel(taskList, viewPanel);
+		addPanel = new AddPanel(viewPanel);
 
 		tPane = new JTabbedPane();
 		tPane.addTab("Create Task", addPanel);
