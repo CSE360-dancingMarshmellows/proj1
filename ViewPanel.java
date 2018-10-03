@@ -66,32 +66,61 @@ public class ViewPanel extends JPanel {
 		taskList.add(currTask);
 		tasks++;
 		JLabel newTask = new JLabel(currTask.toString());
-		allTasks.add(newTask);
 		taskLabels.add(newTask);
+		sortTasks();
+		updateLabels();
 		return 1;
 	}
 	
 	public void sortTasks() {
-		
+		int n = tasks-1;
+		int i = 0;
+		while (i < n) {
+			int max = i;
+			int j = i+1;
+			while (j < tasks) {
+				if (taskList.get(j).getDuration() > taskList.get(max).getDuration()) {
+					max = j;
+				}
+				Task temp = taskList.get(max);
+				JLabel tempLab = taskLabels.get(max);
+				taskList.set(max, taskList.get(i));
+				taskLabels.set(max, taskLabels.get(i));
+				taskList.set(i, temp);
+				taskLabels.set(i, tempLab);
+				j++;
+			}
+			i++;
+		}
 	}
 	
 	public void updateLabels() {
-		
+		if (tasks > 0) {
+			clearLabels();
+		}
+		int i = 0;
+		while (i < tasks) {
+			allTasks.add(taskLabels.get(i));
+			i++;
+		}
+		allTasks.repaint();
+	}
+	
+	public void clearLabels() {
+		int i = 0;
+		while (i < tasks) {
+			allTasks.remove(taskLabels.get(i));
+			i++;
+		}
+		allTasks.revalidate();
+		allTasks.repaint();
 	}
 	
 	private class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			taskList = null;
-			System.out.print("Tasks deleted");
-			int i = 0;
-			while (i < tasks) {
-				allTasks.remove(taskLabels.get(i));
-				i++;
-			}
-			allTasks.revalidate();
-			allTasks.repaint();
 			tasks = 0;
-			System.out.print("Panel emptied");
+			clearLabels();
 		}
 	}
 }
