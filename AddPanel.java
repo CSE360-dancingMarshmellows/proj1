@@ -1,4 +1,3 @@
-
 //CSE 360 Fall 2018
 
 import java.awt.*;
@@ -8,15 +7,13 @@ import java.util.*;
 import java.lang.*;
 
 public class AddPanel extends JPanel {
-	private ArrayList<Task> taskList;
 	private JButton addTask;
 	private ViewPanel viewPanel;
 	private JLabel errorMessage;
 	private JTextField name, duration, dependencies;
 
 
-	public AddPanel(ArrayList<Task> taskList, ViewPanel viewPanel) {
-		this.taskList = taskList;
+	public AddPanel(ViewPanel viewPanel) {
 		this.viewPanel = viewPanel;
 		
 		JPanel createPanel = new JPanel(new BorderLayout());
@@ -61,7 +58,7 @@ private class ButtonListener implements ActionListener {
 	public void actionPerformed(ActionEvent event) {
 		Task currTask = new Task();
 		try {
-			String taskName = name.getText();
+			String taskName = name.getText().trim();
 			int taskDur = Integer.parseInt(duration.getText());
 			String taskDep = dependencies.getText();
 			
@@ -86,22 +83,34 @@ private class ButtonListener implements ActionListener {
 					String[] deps = new String[15];
 					deps[0] = st.nextToken();
 					while(st.hasMoreTokens()) {
-						deps[dep] = st.nextToken();
+						deps[dep] = st.nextToken().trim();
 						dep++;
 					}
 					currTask.setDependencies(deps, dep);
 
 				}
 				dependencies.setText("");
-				taskList.add(currTask);
-				viewPanel.addTask(currTask);
-				errorMessage.setText("");
+				int check = viewPanel.addTask(currTask);
+				System.out.print(check);
+				if (check == 2) {
+					errorMessage.setText("           This task name already exists");
+					errorMessage.setForeground(Color.red);
+				}
+				else if (check == 3) {
+					errorMessage.setText("           One or more task dependencies do not exist");
+					errorMessage.setForeground(Color.red);
+				}
+				else if (check == 1){
+					errorMessage.setText("");
+				}
 			}
 		}
+		
 		catch(NumberFormatException nfe) {
 			errorMessage.setText("           Please enter an integer for Task Duration.");
 			errorMessage.setForeground(Color.red);
 		}
+		
 		catch(Exception e) {
 			errorMessage.setText("           Please enter both Task Name and Duration");
 			errorMessage.setForeground(Color.red);
