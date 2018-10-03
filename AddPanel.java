@@ -12,7 +12,6 @@ public class AddPanel extends JPanel {
 	private JLabel errorMessage;
 	private JTextField name, duration, dependencies;
 
-
 	public AddPanel(ViewPanel viewPanel) {
 		this.viewPanel = viewPanel;
 		
@@ -34,7 +33,7 @@ public class AddPanel extends JPanel {
 		fields.add(name);
 		labels.add(new JLabel("           Enter Duration of the Task"));
 		fields.add(duration);
-		labels.add(new JLabel("           Enter any Dependencies the Task Has                "));
+		labels.add(new JLabel("           Enter any Dependencies the Task Has"));
 		fields.add(dependencies);
 
 		JPanel buttons = new JPanel(new GridLayout(1, 3));
@@ -91,7 +90,6 @@ private class ButtonListener implements ActionListener {
 				}
 				dependencies.setText("");
 				int check = viewPanel.addTask(currTask);
-				System.out.print(check);
 				if (check == 2) {
 					errorMessage.setText("           This task name already exists");
 					errorMessage.setForeground(Color.red);
@@ -109,11 +107,17 @@ private class ButtonListener implements ActionListener {
 		catch(NumberFormatException nfe) {
 			errorMessage.setText("           Please enter an integer for Task Duration.");
 			errorMessage.setForeground(Color.red);
+			name.setText("");
+			duration.setText("");
+			dependencies.setText("");
 		}
 		
 		catch(Exception e) {
 			errorMessage.setText("           Please enter both Task Name and Duration");
 			errorMessage.setForeground(Color.red);
+			name.setText("");
+			duration.setText("");
+			dependencies.setText("");
 		}
 	}
 }
