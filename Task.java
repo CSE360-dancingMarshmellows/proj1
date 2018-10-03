@@ -1,4 +1,3 @@
-
 //CSE 360 Fall 2018
 
 import javax.swing.*;
@@ -25,9 +24,13 @@ public class Task {
 	public int getDuration() {
 		return duration;
 	}
+	
+	public int getDependency() {
+		return dependency;
+	}
 
-	public String [] getDependencies() {
-		return dependencies;
+	public String getDependencies(int index) {
+		return dependencies[index];
 	}
 
 	public void setName(String name) {
