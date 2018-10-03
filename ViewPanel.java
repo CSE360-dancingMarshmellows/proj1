@@ -11,6 +11,7 @@ public class ViewPanel extends JPanel {
 	private JPanel allTasks;
 	private JPanel viewTasks;
 	private JButton reset;
+	private ArrayList<JLabel> taskLabels;
 
 	public ViewPanel(ArrayList<Task> taskList) {
 		this.taskList = taskList;
@@ -29,6 +30,8 @@ public class ViewPanel extends JPanel {
 		JScrollPane scroll = new JScrollPane(allTasks);
 		add(scroll, BorderLayout.NORTH);
 		add(viewTasks, BorderLayout.SOUTH);
+		
+		taskLabels = new ArrayList<JLabel>();
 	}
 
 	public int addTask(Task currTask) {
@@ -64,14 +67,31 @@ public class ViewPanel extends JPanel {
 		tasks++;
 		JLabel newTask = new JLabel(currTask.toString());
 		allTasks.add(newTask);
+		taskLabels.add(newTask);
 		return 1;
+	}
+	
+	public void sortTasks() {
+		
+	}
+	
+	public void updateLabels() {
+		
 	}
 	
 	private class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-			/*taskList = null;
-			remove(viewTasks);
-			allTasks = null;*/
+			taskList = null;
+			System.out.print("Tasks deleted");
+			int i = 0;
+			while (i < tasks) {
+				allTasks.remove(taskLabels.get(i));
+				i++;
+			}
+			allTasks.revalidate();
+			allTasks.repaint();
+			tasks = 0;
+			System.out.print("Panel emptied");
 		}
 	}
 }
