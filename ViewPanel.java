@@ -1,45 +1,120 @@
-
 //CSE 360 Fall 2018
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.util.ArrayList;
+import java.util.*;
+import java.lang.*;
 
-public class ViewPanel extends JPanel {
-	private ArrayList<Task> taskList;
-	private JPanel allTasks;
-	private JPanel viewTasks;
-	private JButton reset;
+public class AddPanel extends JPanel {
+	private JButton addTask;
+	private ViewPanel viewPanel;
+	private JLabel errorMessage;
+	private JTextField name, duration, dependencies;
 
-	public ViewPanel(ArrayList<Task> taskList) {
-		this.taskList = taskList;
+
+	public AddPanel(ViewPanel viewPanel) {
+		this.viewPanel = viewPanel;
 		
+		JPanel createPanel = new JPanel(new BorderLayout());
+
+		JPanel welcome = new JPanel(new GridLayout(1, 1));
+		errorMessage = new JLabel("");
+		welcome.add(new JLabel("                                                                         Welcome to Task Scheduler"));
+		welcome.add(errorMessage);
+
+		JPanel fields = new JPanel(new GridLayout(10,1));
+		JPanel labels = new JPanel(new GridLayout(10,1));
+
+		name = new JTextField(30);
+		duration = new JTextField(30);
+		dependencies = new JTextField(30);
+
+		labels.add(new JLabel("           Enter Name of the Task"));
+		fields.add(name);
+		labels.add(new JLabel("           Enter Duration of the Task"));
+		fields.add(duration);
+		labels.add(new JLabel("           Enter any Dependencies the Task Has                "));
+		fields.add(dependencies);
+
+		JPanel buttons = new JPanel(new GridLayout(1, 3));
+		addTask = new JButton("Add Task");
+		buttons.add(new JLabel(""));
+		buttons.add(addTask);
+		buttons.add(new JLabel(""));
+		addTask.addActionListener(new ButtonListener());
+
+		createPanel.add(welcome, BorderLayout.NORTH);
+		createPanel.add(labels, BorderLayout.WEST);
+		createPanel.add(fields, BorderLayout.EAST);
+		createPanel.add(buttons, BorderLayout.SOUTH);
+
 		setLayout(new BorderLayout());
-
-		viewTasks = new JPanel(new GridLayout(1, 3));
-		reset = new JButton("Clear Tasks");
-		viewTasks.add(new JLabel(""));
-		viewTasks.add(reset);
-		viewTasks.add(new JLabel(""));
-		reset.addActionListener(new ButtonListener());
-
-		allTasks = new JPanel();
-		allTasks.setLayout(new BoxLayout(allTasks, BoxLayout.Y_AXIS));
-		JScrollPane scroll = new JScrollPane(allTasks);
-		add(scroll, BorderLayout.NORTH);
-		add(viewTasks, BorderLayout.SOUTH);
+		add(createPanel, BorderLayout.WEST);
 	}
 
-	public void addTask(Task currTask) {
-		JLabel newTask = new JLabel(currTask.toString());
-		allTasks.add(newTask);
-	}
-	
-	private class ButtonListener implements ActionListener {
-		public void actionPerformed(ActionEvent event) {
-			// Checks to see if there are any tasks and deletes them if there are
-			// Clears the text area
+
+private class ButtonListener implements ActionListener {
+	public void actionPerformed(ActionEvent event) {
+		Task currTask = new Task();
+		try {
+			String taskName = name.getText().trim();
+			int taskDur = Integer.parseInt(duration.getText());
+			String taskDep = dependencies.getText();
+			
+			if (taskName.length() == 0 || taskDur == 0) {
+				Exception e = new Exception();
+				throw e;
+			}
+
+			if (taskDur < 0 ) {
+				Exception nfe = new Exception();
+				throw nfe;
+			}
+
+			else {
+				currTask.setName(taskName);
+				name.setText("");
+				currTask.setDuration(taskDur);
+				duration.setText("");
+				if (taskDep.length() != 0) {
+					StringTokenizer st = new StringTokenizer(taskDep, " ");
+					int dep = 1;
+					String[] deps = new String[15];
+					deps[0] = st.nextToken();
+					while(st.hasMoreTokens()) {
+						deps[dep] = st.nextToken().trim();
+						dep++;
+					}
+					currTask.setDependencies(deps, dep);
+
+				}
+				dependencies.setText("");
+				int check = viewPanel.addTask(currTask);
+				System.out.print(check);
+				if (check == 2) {
+					errorMessage.setText("           This task name already exists");
+					errorMessage.setForeground(Color.red);
+				}
+				else if (check == 3) {
+					errorMessage.setText("           One or more task dependencies do not exist");
+					errorMessage.setForeground(Color.red);
+				}
+				else if (check == 1){
+					errorMessage.setText("");
+				}
+			}
+		}
+		
+		catch(NumberFormatException nfe) {
+			errorMessage.setText("           Please enter an integer for Task Duration.");
+			errorMessage.setForeground(Color.red);
+		}
+		
+		catch(Exception e) {
+			errorMessage.setText("           Please enter both Task Name and Duration");
+			errorMessage.setForeground(Color.red);
 		}
 	}
+}
 }
