@@ -118,9 +118,10 @@ public class ViewPanel extends JPanel {
 	
 	private class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
-			taskList = null;
-			tasks = 0;
+			taskList = new ArrayList<Task>();
 			clearLabels();
+			tasks = 0;
+			taskLabels = new ArrayList<JLabel>();
 		}
 	}
 }
