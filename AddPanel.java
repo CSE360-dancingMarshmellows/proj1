@@ -52,7 +52,6 @@ public class AddPanel extends JPanel {
 		add(createPanel, BorderLayout.WEST);
 	}
 
-
 private class ButtonListener implements ActionListener {
 	public void actionPerformed(ActionEvent event) {
 		Task currTask = new Task();
@@ -91,12 +90,10 @@ private class ButtonListener implements ActionListener {
 				dependencies.setText("");
 				int check = viewPanel.addTask(currTask);
 				if (check == 2) {
-					errorMessage.setText("           This task name already exists");
-					errorMessage.setForeground(Color.red);
+					JOptionPane.showMessageDialog(null, "This task name already exists!", "Input Error", JOptionPane.ERROR_MESSAGE);
 				}
 				else if (check == 3) {
-					errorMessage.setText("           One or more task dependencies do not exist");
-					errorMessage.setForeground(Color.red);
+					JOptionPane.showMessageDialog(null, "One or more task dependencies do not exist!", "Input Error", JOptionPane.ERROR_MESSAGE);
 				}
 				else if (check == 1){
 					errorMessage.setText("");
@@ -105,16 +102,14 @@ private class ButtonListener implements ActionListener {
 		}
 		
 		catch(NumberFormatException nfe) {
-			errorMessage.setText("           Please enter an integer for Task Duration.");
-			errorMessage.setForeground(Color.red);
+			JOptionPane.showMessageDialog(null, "Please enter an integer for Task Duration!", "Input Error", JOptionPane.ERROR_MESSAGE);
 			name.setText("");
 			duration.setText("");
 			dependencies.setText("");
 		}
 		
 		catch(Exception e) {
-			errorMessage.setText("           Please enter both Task Name and Duration");
-			errorMessage.setForeground(Color.red);
+			JOptionPane.showMessageDialog(null, "Please enter both Task Name and Duration!", "Input Error", JOptionPane.ERROR_MESSAGE);
 			name.setText("");
 			duration.setText("");
 			dependencies.setText("");
