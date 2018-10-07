@@ -98,20 +98,16 @@ public class PathBuilder {
 	}
 	
 	public void sortPaths() {
-		int n = paths-1;
-		int i = 0;
+		int n = paths;
+		int i = 1;
 		while (i < n) {
-			int max = i;
-			int j = i+1;
-			while (j < paths) {
-				if (pathList.get(j).getDuration() > pathList.get(max).getDuration()) {
-					max = j;
-				}
-				Path temp = pathList.get(max);
-				pathList.set(max, pathList.get(i));
-				pathList.set(i, temp);
-				j++;
+			Path key = pathList.get(i);
+			int j = i-1;
+			while (j >= 0 && pathList.get(j).getDuration() < key.getDuration()) {
+				pathList.set(j+1, pathList.get(j));
+				j--;
 			}
+			pathList.set(j+1, key);
 			i++;
 		}
 	}
