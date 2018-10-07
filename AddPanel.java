@@ -57,16 +57,19 @@ private class ButtonListener implements ActionListener {
 		Task currTask = new Task();
 		try {
 			String taskName = name.getText().trim();
-			int taskDur = Integer.parseInt(duration.getText());
 			String taskDep = dependencies.getText();
 			
-			if (taskName.length() == 0 || taskDur == 0) {
+			if (taskName.length() == 0 || duration.getText().length() == 0) {
+				System.out.println("check");
 				Exception e = new Exception();
 				throw e;
 			}
 
-			if (taskDur < 0 ) {
-				Exception nfe = new Exception();
+			int taskDur = Integer.parseInt(duration.getText());
+
+			if (taskDur <= 0 ) {
+				
+				NumberFormatException nfe = new NumberFormatException();
 				throw nfe;
 			}
 
@@ -83,6 +86,7 @@ private class ButtonListener implements ActionListener {
 					while(st.hasMoreTokens()) {
 						deps[dep] = st.nextToken().trim();
 						dep++;
+						
 					}
 					currTask.setDependencies(deps, dep);
 
@@ -96,14 +100,15 @@ private class ButtonListener implements ActionListener {
 					JOptionPane.showMessageDialog(null, "One or more task dependencies do not exist!", "Input Error", JOptionPane.ERROR_MESSAGE);
 				}
 				else if (check == 1){
+					viewPanel.printTasks();
 					errorMessage.setText("");
 				}
 			}
 		}
 		
 		catch(NumberFormatException nfe) {
-			JOptionPane.showMessageDialog(null, "Please enter an integer for Task Duration!", "Input Error", JOptionPane.ERROR_MESSAGE);
-			name.setText("");
+			JOptionPane.showMessageDialog(null, "Please enter a positive integer for Task Duration!", "Input Error", JOptionPane.ERROR_MESSAGE);
+			
 			duration.setText("");
 			dependencies.setText("");
 		}
