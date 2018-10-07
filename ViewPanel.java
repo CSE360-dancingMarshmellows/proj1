@@ -9,28 +9,49 @@ public class ViewPanel extends JPanel {
 
 	private int tasks;
 	private int paths;
+	private JPanel leftPanel; // will hold tasks on the left 
+	private JPanel rightPanel; // will hold paths on the right
+	private JPanel buttonPanel;
 	private JPanel allPaths;
 	private JPanel viewPaths;
 	private JButton reset;
 	private ArrayList<JLabel> pathLabels;
 	private ArrayList<Task> taskList;
+	private JTextArea taskInfo;
+	private JLabel tasksLabel = new JLabel("Tasks");
 
 	public ViewPanel(ArrayList<Task> taskList) {
+		leftPanel = new JPanel(new BorderLayout());
+		rightPanel = new JPanel();
+		buttonPanel = new JPanel(new GridLayout(1, 3));
+		
+		leftPanel.add(tasksLabel, BorderLayout.NORTH);
+		
 		this.taskList = taskList;
 		tasks = 0;
 		paths = 0;
 		setLayout(new BorderLayout());
 		viewPaths = new JPanel(new GridLayout(1, 3));
 		reset = new JButton("Clear Tasks");
-		viewPaths.add(new JLabel(""));
-		viewPaths.add(reset);
-		viewPaths.add(new JLabel(""));
+		
+		buttonPanel.add(new JLabel(""));
+		buttonPanel.add(reset);
+		buttonPanel.add(new JLabel(""));
 		reset.addActionListener(new ButtonListener());
 		allPaths = new JPanel();
 		allPaths.setLayout(new BoxLayout(allPaths, BoxLayout.Y_AXIS));
 		JScrollPane scroll = new JScrollPane(allPaths);
-		add(scroll, BorderLayout.NORTH);
-		add(viewPaths, BorderLayout.SOUTH);
+		rightPanel.add(scroll, BorderLayout.NORTH);
+		rightPanel.add(viewPaths, BorderLayout.SOUTH);
+		
+		taskInfo = new JTextArea(15,30);
+		taskInfo.setEditable(false);
+		JScrollPane scroll_left = new JScrollPane(taskInfo);
+		leftPanel.add(scroll_left);
+		
+		add(buttonPanel, BorderLayout.SOUTH);
+		add(rightPanel, BorderLayout.EAST);
+		add(leftPanel, BorderLayout.WEST);
 		pathLabels = new ArrayList<JLabel>();
 	}
 
@@ -99,11 +120,18 @@ public class ViewPanel extends JPanel {
 		allPaths.revalidate();
 		allPaths.repaint();
 	}
-	
+	public void printTasks() {
+		String s = "";
+		for(int i = 0; i < taskList.size(); i++) {
+			s += taskList.get(i).toString();
+		}
+		taskInfo.setText(s);
+	}
 	private class ButtonListener implements ActionListener {
 		public void actionPerformed(ActionEvent event) {
 			taskList = new ArrayList<Task>();
 			clearLabels();
+			taskInfo.setText("");
 			tasks = 0;
 			paths = 0;
 			pathLabels = new ArrayList<JLabel>();
