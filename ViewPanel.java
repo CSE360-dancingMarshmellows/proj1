@@ -84,7 +84,6 @@ public class ViewPanel extends JPanel {
 		int i = 0;
 		while (i < paths) {
 			allPaths.add(pathLabels.get(i));
-			System.out.print(pathLabels.get(i).getText());
 			i++;
 		}
 		allPaths.repaint();
