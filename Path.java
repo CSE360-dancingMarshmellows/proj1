@@ -34,7 +34,7 @@ public class Path {
 	}
 	
 	public void setDuration(int duration) {
-		this.duration = duration;
+		this.duration = this.duration + duration;
 	}
 	
 	public void setTasks(String name) {
