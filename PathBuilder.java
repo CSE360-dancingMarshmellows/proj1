@@ -59,39 +59,40 @@ public class PathBuilder {
 	}
 	
 	public void followPath(Task currTask, Path currPath) {
-		int j = 0;
-		while (j < currTask.getDependency()) {
-			int k = 0;
-			while (k < tasks) {
-				if (currTask.getDependencies(j).equals(taskList.get(k).getName())) {
-					if (j > 0) {
-						// Additional path started for every dependency over 1
-						Path newPath = new Path(paths);
-						newPath.setDuration(currPath.getDuration() + taskList.get(j).getDuration());
-						newPath.setTasks(currTask.getName());
-						newPath.setLength(currPath.getLength() + 1);
-						followPath(taskList.get(k), newPath);
+		if (currTask.getDependency() != 0) {
+			int j = 0;
+			while (j < currTask.getDependency()) {
+				int k = 0;
+				while (k < tasks) {
+					if (currTask.getDependencies(j).equals(taskList.get(k).getName())) {
+						if (j > 0) {
+							// Additional path started for every dependency over 1
+							Path newPath = new Path(paths);
+							newPath.setDuration(currTask.getDuration());
+							newPath.setTasks(currTask.getName());
+							newPath.setLength(currPath.getLength() + 1);
+							followPath(taskList.get(k), newPath);
+						}
+						else if (j == 0) {
+							// Follow path up if first dependency
+							currPath.setDuration(currTask.getDuration());
+							currPath.setTasks(currTask.getName());
+							currPath.setLength(currPath.getLength() + 1);
+							followPath(taskList.get(k), currPath);
+						}
 					}
-					else if (j == 0) {
-						// Follow path up if first dependency
-						currPath.setDuration(currPath.getDuration() + taskList.get(j).getDuration());
-						currPath.setTasks(currTask.getName());
-						currPath.setLength(currPath.getLength() + 1);
-						followPath(taskList.get(k), currPath);
-					}
+					k++;
 				}
-				k++;
+				j++;	
 			}
-			j++;
 		}
 		// Base case, If dependencies = 0, a start is found that is not also an end
-		if (currTask.getDependency() == 0) {
-			currPath.setDuration(currPath.getDuration() + currTask.getDuration());
+		else if (currTask.getDependency() == 0) {
+			currPath.setDuration(currTask.getDuration());
 			currPath.setLength(currPath.getLength() + 1);
 			currPath.setTasks(currTask.getName());
 			pathList.add(currPath);
 			paths++;
-			System.out.print(currPath.toString());
 			return;
 		}
 	}
@@ -116,7 +117,6 @@ public class PathBuilder {
 	}
 	
 	public int getPaths() {
-		System.out.print("getting paths\n");
 		return paths;
 	}
 	
