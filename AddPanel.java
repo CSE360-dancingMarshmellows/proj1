@@ -99,8 +99,8 @@ private class ButtonListener implements ActionListener {
 				else if (check == 3) {
 					JOptionPane.showMessageDialog(null, "One or more task dependencies do not exist!", "Input Error", JOptionPane.ERROR_MESSAGE);
 				}
-				else if (check == 1){
-					viewPanel.printTasks();
+				else if (check == 1) {
+					//viewPanel.printTasks();
 					errorMessage.setText("");
 				}
 			}
