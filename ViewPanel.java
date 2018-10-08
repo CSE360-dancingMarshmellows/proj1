@@ -1,5 +1,4 @@
 //CSE 360 Fall 2018
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -19,8 +18,8 @@ public class ViewPanel extends JPanel {
 	private ArrayList<JLabel> taskLabels;
 	private ArrayList<Task> taskList;
 
-	public ViewPanel(ArrayList<Task> taskList) {
-		this.taskList = taskList;
+	public ViewPanel(ArrayList<Task> myTasks) {
+		this.taskList = myTasks;
 		tasks = 0;
 		paths = 0;
 		setLayout(new BorderLayout());
@@ -30,8 +29,23 @@ public class ViewPanel extends JPanel {
 		viewPaths.add(reset);
 		viewPaths.add(new JLabel(""));
 		viewPaths.add(process);
-		reset.addActionListener(new ButtonListener());
-		process.addActionListener(new ButtonListener());
+		
+		reset.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				clearLabels();
+				tasks = 0;
+				paths = 0;
+				taskList = new ArrayList<Task>();
+			}
+		});
+		
+		process.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				System.out.print("i heard you\n");
+				updatePaths();
+			}
+		});
+		
 		allPaths = new JPanel();
 		allPaths.setLayout(new BoxLayout(allPaths, BoxLayout.Y_AXIS));
 		allPaths.add(new JLabel("Paths:"));
@@ -60,33 +74,34 @@ public class ViewPanel extends JPanel {
 			}
 			i++;
 		}
-		i = 0;/*
-		boolean found;
-		int deps = currTask.getDependency();
-		while (i < deps) {
-			found = false;
-			int j = 0;
-			while (j < tasks) {
-				String dep = currTask.getDependencies(i);
-				String name = taskList.get(j).getName();
-				if (dep.equals(name)) {
-					found = true;
-				}
-				j++;
-			}
-			if (found == false) {
-				return 3;
-			}
-			i++;
-		}*/
 		taskList.add(currTask);
 		tasks++;
+		sortTasks();
+		clearLabels();		
+		updateTasks();
+		return 1;
+	}
+	
+	public void updateTasks() {
+		int i = 0;
+		while (i < tasks) {
+			String taskString = taskList.get(i).toString();
+			JLabel taskLabel = new JLabel(taskString);
+			taskLabels.add(taskLabel);
+			i++;
+		}
+		i = 0;
+		while (i < tasks) {
+			allTasks.add(taskLabels.get(i));
+			i++;
+		}
+		allTasks.repaint();
+	}
+	
+	public void updatePaths() {
 		PathBuilder pathBuild = new PathBuilder(taskList);
 		paths = pathBuild.getPaths();
-		sortTasks();
-		clearLabels();
-	
-		i = 0;
+		int i = 0;
 		while (i < paths) {
 			String pathString = pathBuild.conString(i);
 			JLabel pathLabel = new JLabel(pathString);
@@ -94,30 +109,11 @@ public class ViewPanel extends JPanel {
 			i++;
 		}
 		i = 0;
-		while (i < tasks) {
-			String taskString = taskList.get(i).toString();
-			JLabel taskLabel = new JLabel(taskString);
-			taskLabels.add(taskLabel);
-			i++;
-		}
-		
-		updateLabels();
-		return 1;
-	}
-	
-	public void updateLabels() {
-		int i = 0;
 		while (i < paths) {
 			allPaths.add(pathLabels.get(i));
 			i++;
 		}
 		allPaths.repaint();
-		i = 0;
-		while (i < tasks) {
-			allTasks.add(taskLabels.get(i));
-			i++;
-		}
-		allTasks.repaint();
 	}
 	
 	
@@ -152,15 +148,6 @@ public class ViewPanel extends JPanel {
 			}
 			taskList.set(j+1, key);
 			i++;
-		}
-	}
-	
-	private class ButtonListener implements ActionListener {
-		public void actionPerformed(ActionEvent event) {
-			taskList = new ArrayList<Task>();
-			clearLabels();
-			tasks = 0;
-			paths = 0;
 		}
 	}
 }
