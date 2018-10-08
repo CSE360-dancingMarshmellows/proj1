@@ -14,6 +14,7 @@ public class ViewPanel extends JPanel {
 	private JPanel pathTasks;
 	private JPanel viewPaths;
 	private JButton reset;
+	private JButton process;
 	private ArrayList<JLabel> pathLabels;
 	private ArrayList<JLabel> taskLabels;
 	private ArrayList<Task> taskList;
@@ -25,10 +26,12 @@ public class ViewPanel extends JPanel {
 		setLayout(new BorderLayout());
 		viewPaths = new JPanel(new GridLayout(1, 3));
 		reset = new JButton("Clear Tasks");
-		viewPaths.add(new JLabel(""));
+		process = new JButton("Process Paths");
 		viewPaths.add(reset);
 		viewPaths.add(new JLabel(""));
+		viewPaths.add(process);
 		reset.addActionListener(new ButtonListener());
+		process.addActionListener(new ButtonListener());
 		allPaths = new JPanel();
 		allPaths.setLayout(new BoxLayout(allPaths, BoxLayout.Y_AXIS));
 		allPaths.add(new JLabel("Paths:"));
