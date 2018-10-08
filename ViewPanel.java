@@ -60,7 +60,7 @@ public class ViewPanel extends JPanel {
 			}
 			i++;
 		}
-		i = 0;
+		i = 0;/*
 		boolean found;
 		int deps = currTask.getDependency();
 		while (i < deps) {
@@ -78,7 +78,7 @@ public class ViewPanel extends JPanel {
 				return 3;
 			}
 			i++;
-		}
+		}*/
 		taskList.add(currTask);
 		tasks++;
 		PathBuilder pathBuild = new PathBuilder(taskList);
