@@ -12,7 +12,6 @@ public class TaskScheduler extends JApplet {
 	private AddPanel addPanel;
 	private ViewPanel viewPanel;
 	private HelpPanel helpPanel;
-	private AboutPanel aboutPanel;
 	private ArrayList<Task> taskList;
 
 	public void init() {
@@ -21,13 +20,11 @@ public class TaskScheduler extends JApplet {
 		viewPanel = new ViewPanel(taskList);
 		addPanel = new AddPanel(viewPanel);
 		helpPanel = new HelpPanel();
-		aboutPanel = new AboutPanel();
 
 		tPane = new JTabbedPane();
 		tPane.addTab("Create Task", addPanel);
 		tPane.addTab("View Tasks", viewPanel);
 		tPane.addTab("Help", helpPanel);
-		tPane.addTab("About", aboutPanel);
 		getContentPane().add(tPane);
 		setSize (APPLET_WIDTH, APPLET_HEIGHT);
 	}
