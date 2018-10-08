@@ -99,16 +99,17 @@ private class ButtonListener implements ActionListener {
 				else if (check == 3) {
 					JOptionPane.showMessageDialog(null, "One or more task dependencies do not exist!", "Input Error", JOptionPane.ERROR_MESSAGE);
 				}
+				else if (check == 4) {
+					JOptionPane.showMessageDialog(null,  "A task dependency creates a cyclical path. Please revise input.", "Input Error", JOptionPane.ERROR_MESSAGE);
+				}
 				else if (check == 1) {
-					//viewPanel.printTasks();
 					errorMessage.setText("");
 				}
 			}
 		}
 		
 		catch(NumberFormatException nfe) {
-			JOptionPane.showMessageDialog(null, "Please enter a positive integer for Task Duration!", "Input Error", JOptionPane.ERROR_MESSAGE);
-			
+			JOptionPane.showMessageDialog(null, "Please enter a positive integer for Task Duration!", "Input Error", JOptionPane.ERROR_MESSAGE);	
 			duration.setText("");
 			dependencies.setText("");
 		}
