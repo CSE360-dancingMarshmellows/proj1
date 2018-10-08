@@ -48,7 +48,7 @@ public class Path {
 			sum = sum + tasks.get(i) + " ";
 			i--;
 		}
-		sum = sum + "Length: " + length + " Duration: " + duration;
+		sum = sum + "     Length: " + length + "     " + " Duration: " + duration;
 		return sum;
 	}
 }
