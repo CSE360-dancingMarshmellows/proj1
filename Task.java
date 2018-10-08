@@ -53,7 +53,7 @@ public class Task {
 			dep = dep + dependencies[i] + " "; 
 			i++;
 		}
-		String result = "Task Name: " + name + "\nTask Duration: " + Integer.toString(duration) + "\nTask Dependencies: " + dep + "\n\n"; 
+		String result = "Task Name: " + name + "     " + "Task Duration: " + Integer.toString(duration) + "     " + "Task Dependencies: " + dep; 
 		return result;
 	}
 }
