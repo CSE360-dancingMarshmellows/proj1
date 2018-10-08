@@ -25,12 +25,13 @@ public class PathBuilder {
 			i++;
 		}
 		i = 0;
+		int [] depScores = new int [taskList.size()];
 		while (i < ends.size()) {
 			int j = 0;
 			while (j < tasks) {
 				if (taskList.get(j).getName().equals(ends.get(i)) && taskList.get(j).getDependency() > 0) {
 					Path currPath = new Path(paths);
-					followPath(taskList.get(j), currPath);
+					followPath(taskList.get(j), currPath, depScores);
 				}
 				j++;
 			}
@@ -58,27 +59,33 @@ public class PathBuilder {
 		}
 	}
 	
-	public void followPath(Task currTask, Path currPath) {
+	public void followPath(Task currTask, Path currPath, int [] depScores) {
 		if (currTask.getDependency() != 0) {
 			int j = 0;
 			while (j < currTask.getDependency()) {
 				int k = 0;
 				while (k < tasks) {
 					if (currTask.getDependencies(j).equals(taskList.get(k).getName())) {
+						// Check for cycles
+						depScores[k] = depScores[k] + 1;
+						if (depScores[k] > 1) {
+							paths = -1;
+							return;
+						}
 						if (j > 0) {
 							// Additional path started for every dependency over 1
 							Path newPath = new Path(paths);
 							newPath.setDuration(currTask.getDuration());
 							newPath.setTasks(currTask.getName());
 							newPath.setLength(currPath.getLength() + 1);
-							followPath(taskList.get(k), newPath);
+							followPath(taskList.get(k), newPath, depScores);
 						}
 						else if (j == 0) {
 							// Follow path up if first dependency
 							currPath.setDuration(currTask.getDuration());
 							currPath.setTasks(currTask.getName());
 							currPath.setLength(currPath.getLength() + 1);
-							followPath(taskList.get(k), currPath);
+							followPath(taskList.get(k), currPath, depScores);
 						}
 					}
 					k++;
