@@ -1,4 +1,5 @@
 //CSE 360 Fall 2018
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -41,8 +42,9 @@ public class ViewPanel extends JPanel {
 		
 		process.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-				System.out.print("i heard you\n");
 				updatePaths();
+				pathTasks.revalidate();
+				pathTasks.repaint();
 			}
 		});
 		
@@ -103,8 +105,7 @@ public class ViewPanel extends JPanel {
 		paths = pathBuild.getPaths();
 		int i = 0;
 		while (i < paths) {
-			String pathString = pathBuild.conString(i);
-			JLabel pathLabel = new JLabel(pathString);
+			JLabel pathLabel = new JLabel(pathBuild.getPath(i).toString());
 			pathLabels.add(pathLabel);
 			i++;
 		}
@@ -113,7 +114,6 @@ public class ViewPanel extends JPanel {
 			allPaths.add(pathLabels.get(i));
 			i++;
 		}
-		allPaths.repaint();
 	}
 	
 	
