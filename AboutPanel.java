@@ -29,7 +29,9 @@ public class AboutPanel extends JPanel{
 		str += "Team member:\n\n";
 		
 		//Sarah
-		str += "\n\n";
+		str += "I am Sarah Bulle, a student currently majoring in Digital Culture with a focus in Media Processing. For this software, I coded\n"
+				+ "the logical operations of the software, such as the collection and processing of user input, throwing and catching of errors,\n"
+				+ "the construction of tasks and paths and their generation into output.\n\n";
 		
 		//Adrian
 		str += "My name is Adrian Luna, I'm a computer science major. For this software, my contributitions were mostly front end. Meaning I\n"
