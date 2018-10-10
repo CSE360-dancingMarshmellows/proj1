@@ -39,7 +39,9 @@ public class AboutPanel extends JPanel{
 				+ "I contributed towards the design and layout of the final project, and helped out on the back end code.\n\n";
 		
 		//Tyler
-		str += "\n\n";
+		str += "My name is Tyler Martin and I am a Computer Science major. For this software I mainly assisted in logistical planning\n"
+				+ "and helped tweak the design in order to better satisfy the project requirements. I also took into consideration factors such as \n"
+				+ "readability in order to make the software more user-friendly.\n\n";
 		
 		//Will
 		str += "\n\n";
