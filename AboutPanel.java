@@ -44,7 +44,9 @@ public class AboutPanel extends JPanel{
 				+ "readability in order to make the software more user-friendly.\n\n";
 		
 		//Will
-		str += "\n\n";
+		str += "My name is William Topping and I am a Computer Science major. For this software I mostly assisted in the editing and the layout\n"
+				+ "to ensure readability and to satisfy requirements. I also performed some final tests to make sure the software is user-friendly\n"
+				+ "and is properly functioning according to the user documentation.\n\n";
 		
 		aboutPanel.setText(str);
 	}
