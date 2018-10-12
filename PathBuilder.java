@@ -11,6 +11,8 @@ public class PathBuilder {
 	private int paths;
 	private ArrayList<String> ends;
 	private Boolean cycle;
+	private Boolean found;
+	private Boolean doe;
 	
 	public PathBuilder(ArrayList<Task> taskList) {
 		this.taskList = new ArrayList<Task>();
@@ -20,12 +22,19 @@ public class PathBuilder {
 		paths = 0;
 		ends = new ArrayList<String>();
 		cycle = false;
+		found = true;
+		doe = false;
 		
 		int i = 0;
 		while(i < tasks) {
 			assessTask(taskList.get(i));
 			i++;
 		}
+		
+		if (found == false) {
+			doe = true;
+		}
+		
 		i = 0;
 		int [] depScores = new int [taskList.size()];
 		while (i < ends.size()) {
@@ -56,6 +65,18 @@ public class PathBuilder {
 			}
 			i++;
 		}
+		i = 0;
+		while (i < currTask.getDependency()) {
+			found = false;
+			int j = 0;
+			while (j < tasks) {
+				if (currTask.getDependencies(i).equals(taskList.get(j).getName())) {
+					found = true;
+				}
+				j++;
+			}
+			i++;
+		}
 		if (splitScore == 0) {
 			ends.add(currTask.getName());
 		}
@@ -71,6 +92,7 @@ public class PathBuilder {
 						// Check for cycles
 						depScores[k] = depScores[k] + 1;
 						if (depScores[k] > 1) {
+							System.out.print("cycle");
 							cycle = true;
 							return;
 						}
@@ -130,8 +152,23 @@ public class PathBuilder {
 	}
 	
 	public Boolean getCycle() {
-		cycle = false;
-		return true;
+		if (cycle == true) {
+			cycle = false;
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	public Boolean doesNotExist() {
+		if (doe == true) {
+			doe = false;
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 	
 	public String conString(int index) {
