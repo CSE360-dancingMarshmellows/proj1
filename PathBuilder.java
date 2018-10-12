@@ -10,6 +10,7 @@ public class PathBuilder {
 	private int tasks;
 	private int paths;
 	private ArrayList<String> ends;
+	private Boolean cycle;
 	
 	public PathBuilder(ArrayList<Task> taskList) {
 		this.taskList = new ArrayList<Task>();
@@ -18,7 +19,8 @@ public class PathBuilder {
 		tasks = taskList.size();
 		paths = 0;
 		ends = new ArrayList<String>();
-
+		cycle = false;
+		
 		int i = 0;
 		while(i < tasks) {
 			assessTask(taskList.get(i));
@@ -69,7 +71,7 @@ public class PathBuilder {
 						// Check for cycles
 						depScores[k] = depScores[k] + 1;
 						if (depScores[k] > 1) {
-							paths = -1;
+							cycle = true;
 							return;
 						}
 						if (j > 0) {
@@ -123,6 +125,14 @@ public class PathBuilder {
 		return paths;
 	}
 	
+	public Path getPath(int index) {
+		return pathList.get(index);
+	}
+	
+	public Boolean getCycle() {
+		cycle = false;
+		return true;
+	}
 	
 	public String conString(int index) {
 		return pathList.get(index).toString();
