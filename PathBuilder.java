@@ -27,7 +27,9 @@ public class PathBuilder {
 		
 		int i = 0;
 		while(i < tasks) {
+			int [] cycles = new int [taskList.size()];
 			assessTask(taskList.get(i));
+			checkCycles(taskList.get(i), cycles);
 			i++;
 		}
 		
@@ -81,6 +83,29 @@ public class PathBuilder {
 			ends.add(currTask.getName());
 		}
 	}
+	
+	public void checkCycles(Task currTask, int [] cycles) {
+		if (currTask.getDependency() != 0) {
+			int j = 0;
+			while (j < currTask.getDependency()) {
+				int k = 0;
+				while (k < tasks) {
+					if (currTask.getDependencies(j).equals(taskList.get(k).getName())) {
+						cycles[k] = cycles[k] + 1;
+						if (cycles[k] > 1) {
+							cycle = true;
+							return;
+						}
+						checkCycles(taskList.get(k), cycles);
+					}
+					k++;
+				}
+				j++;
+			}
+		}
+		return;
+	}
+	
 	
 	public void followPath(Task currTask, Path currPath, int [] depScores) {
 		if (currTask.getDependency() != 0) {
