@@ -95,12 +95,6 @@ private class ButtonListener implements ActionListener {
 				int check = viewPanel.addTask(currTask);
 				if (check == 2) {
 					JOptionPane.showMessageDialog(null, "This task name already exists!", "Input Error", JOptionPane.ERROR_MESSAGE);
-				}/*
-				else if (check == 3) {
-					JOptionPane.showMessageDialog(null, "One or more task dependencies do not exist!", "Input Error", JOptionPane.ERROR_MESSAGE);
-				}*/
-				else if (check == 4) {
-					JOptionPane.showMessageDialog(null,  "A task dependency creates a cyclical path. Please revise input.", "Input Error", JOptionPane.ERROR_MESSAGE);
 				}
 				else if (check == 1){
 					errorMessage.setText("");
