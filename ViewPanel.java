@@ -103,8 +103,10 @@ public class ViewPanel extends JPanel {
 	public void updatePaths() {
 		PathBuilder pathBuild = new PathBuilder(taskList);
 		if (pathBuild.getCycle() == true) {
-			System.out.print("true");
 			JOptionPane.showMessageDialog(null,  "A task dependency creates a cyclical path. Please revise input.", "Input Error", JOptionPane.ERROR_MESSAGE);
+		}
+		if (pathBuild.doesNotExist() == true) {
+			JOptionPane.showMessageDialog(null,  "One or more task has a dependency that does not exist.", "Input Error", JOptionPane.ERROR_MESSAGE);
 		}
 		paths = pathBuild.getPaths();
 		int i = 0;
