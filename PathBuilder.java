@@ -10,9 +10,11 @@ public class PathBuilder {
 	private int tasks;
 	private int paths;
 	private ArrayList<String> ends;
+	private ArrayList<String> starts;
 	private Boolean cycle;
 	private Boolean found;
 	private Boolean doe;
+	private Boolean broken;
 	
 	public PathBuilder(ArrayList<Task> taskList) {
 		this.taskList = new ArrayList<Task>();
@@ -21,9 +23,11 @@ public class PathBuilder {
 		tasks = taskList.size();
 		paths = 0;
 		ends = new ArrayList<String>();
+		starts = new ArrayList<String>();
 		cycle = false;
 		found = true;
 		doe = false;
+		broken = false;
 		
 		int i = 0;
 		while(i < tasks) {
@@ -31,20 +35,20 @@ public class PathBuilder {
 			assessTask(taskList.get(i));
 			checkCycles(taskList.get(i), cycles);
 			i++;
-		}
-		
-		if (found == false) {
-			doe = true;
+			if (found == false) {
+				doe = true;
+			}
 		}
 		
 		i = 0;
-		int [] depScores = new int [taskList.size()];
 		while (i < ends.size()) {
 			int j = 0;
 			while (j < tasks) {
 				if (taskList.get(j).getName().equals(ends.get(i)) && taskList.get(j).getDependency() > 0) {
 					Path currPath = new Path(paths);
-					followPath(taskList.get(j), currPath, depScores);
+					if (cycle == false) {
+						followPath(taskList.get(j), currPath);
+					}
 				}
 				j++;
 			}
@@ -82,45 +86,50 @@ public class PathBuilder {
 		if (splitScore == 0) {
 			ends.add(currTask.getName());
 		}
+		else if (currTask.getDependency() == 0) {
+			starts.add(currTask.getName());
+		}
+		if (starts.size() > 1 || ends.size() > 1) {
+			broken = true;
+		}
 	}
 	
 	public void checkCycles(Task currTask, int [] cycles) {
 		if (currTask.getDependency() != 0) {
-			int j = 0;
-			while (j < currTask.getDependency()) {
+			int j = currTask.getDependency() - 1;
+			while (j >= 0) {
 				int k = 0;
 				while (k < tasks) {
 					if (currTask.getDependencies(j).equals(taskList.get(k).getName())) {
 						cycles[k] = cycles[k] + 1;
-						if (cycles[k] > 1) {
+						if (cycles[k] > 30) {
 							cycle = true;
 							return;
 						}
-						checkCycles(taskList.get(k), cycles);
+						if (j == 0) {
+							checkCycles(taskList.get(k), cycles);
+						}
+						else {
+							int [] newCycles = cycles;
+							checkCycles(taskList.get(k), newCycles);
+						}
 					}
 					k++;
 				}
-				j++;
+				j--;
 			}
 		}
 		return;
 	}
 	
 	
-	public void followPath(Task currTask, Path currPath, int [] depScores) {
+	public void followPath(Task currTask, Path currPath) {
 		if (currTask.getDependency() != 0) {
-			int j = currTask.getDependency()-1;
+			int j = currTask.getDependency() - 1;
 			while (j >= 0) {
 				int k = 0;
 				while (k < tasks) {
 					if (currTask.getDependencies(j).equals(taskList.get(k).getName())) {
-						// Check for cycles
-						depScores[k] = depScores[k] + 1;
-						if (depScores[k] > 1) {
-							System.out.print("cycle");
-							cycle = true;
-							return;
-						}
 						if (j > 0) {
 							// Additional path started for every dependency over 1
 							Path newPath = new Path(paths);
@@ -130,18 +139,16 @@ public class PathBuilder {
 								newPath.setTasks(currPath.getTasks(i));
 								i++;
 							}
-							//newPath.setTaskList(currPath.getTaskList());
 							newPath.setTasks(currTask.getName());
 							newPath.setLength(currPath.getLength() + 1);
-							int [] newDepScores = depScores;
-							followPath(taskList.get(k), newPath, newDepScores);
+							followPath(taskList.get(k), newPath);
 						}
 						else if (j == 0) {
 							// Follow path up if first dependency
 							currPath.setDuration(currTask.getDuration());
 							currPath.setTasks(currTask.getName());
 							currPath.setLength(currPath.getLength() + 1);
-							followPath(taskList.get(k), currPath, depScores);
+							followPath(taskList.get(k), currPath);
 						}
 					}
 					k++;
@@ -203,9 +210,13 @@ public class PathBuilder {
 		}
 	}
 	
-	public String conString(int index) {
-		return pathList.get(index).toString();
-	}
-	
-	
+	public Boolean getBroken() {
+		if (broken == true) {
+			broken = false;
+			return true;
+		}
+		else {
+			return false;
+		}
+	}	
 }
