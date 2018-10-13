@@ -109,8 +109,8 @@ public class PathBuilder {
 	
 	public void followPath(Task currTask, Path currPath, int [] depScores) {
 		if (currTask.getDependency() != 0) {
-			int j = 0;
-			while (j < currTask.getDependency()) {
+			int j = currTask.getDependency()-1;
+			while (j >= 0) {
 				int k = 0;
 				while (k < tasks) {
 					if (currTask.getDependencies(j).equals(taskList.get(k).getName())) {
@@ -124,10 +124,17 @@ public class PathBuilder {
 						if (j > 0) {
 							// Additional path started for every dependency over 1
 							Path newPath = new Path(paths);
-							newPath.setDuration(currTask.getDuration());
+							newPath.setDuration(currPath.getDuration() + currTask.getDuration());
+							int i = 0;
+							while (i < currPath.getLength()) {
+								newPath.setTasks(currPath.getTasks(i));
+								i++;
+							}
+							//newPath.setTaskList(currPath.getTaskList());
 							newPath.setTasks(currTask.getName());
 							newPath.setLength(currPath.getLength() + 1);
-							followPath(taskList.get(k), newPath, depScores);
+							int [] newDepScores = depScores;
+							followPath(taskList.get(k), newPath, newDepScores);
 						}
 						else if (j == 0) {
 							// Follow path up if first dependency
@@ -139,7 +146,7 @@ public class PathBuilder {
 					}
 					k++;
 				}
-				j++;	
+				j--;	
 			}
 		}
 		// Base case, If dependencies = 0, a start is found that is not also an end
