@@ -108,6 +108,9 @@ public class ViewPanel extends JPanel {
 		if (pathBuild.doesNotExist() == true) {
 			JOptionPane.showMessageDialog(null,  "One or more task has a dependency that does not exist.", "Input Error", JOptionPane.ERROR_MESSAGE);
 		}
+		if (pathBuild.getBroken() == true) {
+			JOptionPane.showMessageDialog(null,  "One or more paths are broken or incomplete.", "Input Error", JOptionPane.ERROR_MESSAGE);
+		}
 		paths = pathBuild.getPaths();
 		int i = 0;
 		while (i < paths) {
