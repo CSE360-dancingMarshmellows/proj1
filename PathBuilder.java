@@ -94,6 +94,10 @@ public class PathBuilder {
 		}
 	}
 	
+	public ArrayList<Path> getPathList() {
+		return pathList;
+	}
+	
 	public void checkCycles(Task currTask, int [] cycles) {
 		if (currTask.getDependency() != 0) {
 			int j = currTask.getDependency() - 1;
