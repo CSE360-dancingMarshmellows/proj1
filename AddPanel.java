@@ -52,7 +52,6 @@ public class AddPanel extends JPanel {
 		allTasks = new JPanel();
 		allTasks.setLayout(new BoxLayout(allTasks, BoxLayout.Y_AXIS));
 		allTasks.add(new JLabel("Tasks:"));
-		//allTasks.add(taskButtons);
 		pathTasks = new JPanel();
 		pathTasks.setLayout(new BoxLayout(pathTasks, BoxLayout.Y_AXIS));
 		JScrollPane scroll = new JScrollPane(allPaths);
@@ -234,6 +233,7 @@ public class AddPanel extends JPanel {
 		while (i < tasks) {
 			String taskString = taskList.get(i).toString();
 			JRadioButton taskLabel = new JRadioButton(taskString);
+			taskLabel.addActionListener(new taskSelect());
 			taskLabels.add(taskLabel);
 			taskButtons.add(taskLabel);
 			i++;
@@ -303,6 +303,22 @@ public class AddPanel extends JPanel {
 			}
 			taskList.set(j+1, key);
 			i++;
+		}
+	}
+	
+	private class taskSelect implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			JRadioButton source = (JRadioButton) e.getSource();
+			int i = 0;
+			while (i < tasks) {
+				if (source.equals(taskLabels.get(i))) {
+					name.setText(taskList.get(i).getName());
+					duration.setText(Integer.toString(taskList.get(i).getDuration()));
+					dependencies.setText(taskList.get(i).depToString());
+					return;
+				}
+				i++;
+			}
 		}
 	}
 }
