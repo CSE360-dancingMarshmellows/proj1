@@ -21,11 +21,13 @@ public class AddPanel extends JPanel {
 	private ButtonGroup taskButtons;
 	private ArrayList<Task> taskList;
 	private int criticalPathDur;
+	private String pathInfo;
 
 	public AddPanel() {
 		tasks = 0;
 		paths = 0;
 		criticalPathDur = 0;
+		pathInfo = "";
 		taskList = new ArrayList<Task>();
 		pathLabels = new ArrayList<JLabel>();
 		taskLabels = new ArrayList<JRadioButton>();
@@ -73,7 +75,16 @@ public class AddPanel extends JPanel {
 		savePaths = new JButton("Save");
 		savePaths.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-
+				//while(true) {
+					String fileName = (String)JOptionPane.showInputDialog(null, "Please enter a name for the report:", "Report File Name", JOptionPane.PLAIN_MESSAGE);
+					if ((fileName != null) && (fileName.length() > 0)) {
+						Write writeFile = new Write(pathInfo, fileName);
+						return;
+					}
+					else {
+						JOptionPane.showMessageDialog(null, "Please enter a valid file name.", "Input Error", JOptionPane.ERROR_MESSAGE);
+					}
+				//}
 			}
 		});
 		
@@ -167,7 +178,6 @@ public class AddPanel extends JPanel {
 			String taskDep = dependencies.getText();
 			
 			if (taskName.length() == 0 || duration.getText().length() == 0) {
-				System.out.println("check");
 				Exception e = new Exception();
 				throw e;
 			}
@@ -235,7 +245,6 @@ public class AddPanel extends JPanel {
 			i++;
 		}
 		taskList.add(currTask);
-		System.out.print("Successful");
 		tasks++;
 		sortTasks();
 		clearLabels();		
@@ -264,6 +273,7 @@ public class AddPanel extends JPanel {
 	}
 	
 	public void updatePaths() {
+		pathInfo = "";
 		PathBuilder pathBuild = new PathBuilder(taskList);
 		if (pathBuild.getCycle() == true) {
 			JOptionPane.showMessageDialog(null,  "A task dependency creates a cyclical path. Please revise input.", "Input Error", JOptionPane.ERROR_MESSAGE);
@@ -281,10 +291,12 @@ public class AddPanel extends JPanel {
 				criticalPathDur = pathBuild.getPath(i).getDuration();
 				JLabel criticalPath = new JLabel(pathBuild.getPath(i).toString() + " (Critical Path)");
 				pathLabels.add(criticalPath);
+				pathInfo += criticalPath.getText() + "\n";
 			}
 			else {
 				JLabel pathLabel = new JLabel(pathBuild.getPath(i).toString());
 				pathLabels.add(pathLabel);
+				pathInfo += pathLabel.getText() + "\n";
 			}
 			i++;
 		}
