@@ -7,7 +7,7 @@ import java.util.*;
 import java.lang.*;
 
 public class AddPanel extends JPanel {
-	private JButton addTask, processPaths, savePaths, resetTasks, updateTask;
+	private JButton addTask, processPaths, savePaths, resetTasks, updateTask, critical;
 	private JLabel errorMessage;
 	private JTextField name, duration, dependencies;
 	private JPanel allPaths;
@@ -20,6 +20,7 @@ public class AddPanel extends JPanel {
 	private ArrayList<JRadioButton> taskLabels;
 	private ButtonGroup taskButtons;
 	private ArrayList<Task> taskList;
+	private ArrayList<Path> pathList;
 	private int criticalPathDur;
 	private String pathInfo;
 
@@ -29,6 +30,7 @@ public class AddPanel extends JPanel {
 		criticalPathDur = 0;
 		pathInfo = "";
 		taskList = new ArrayList<Task>();
+		pathList = new ArrayList<Path>();
 		pathLabels = new ArrayList<JLabel>();
 		taskLabels = new ArrayList<JRadioButton>();
 		taskButtons = new ButtonGroup();
@@ -66,44 +68,44 @@ public class AddPanel extends JPanel {
 		processPaths = new JButton("Process");
 		processPaths.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
+				clearLabels();
+				updateTasks();
 				updatePaths();
-				pathTasks.revalidate();
-				pathTasks.repaint();
 			}
 		});
 		
 		savePaths = new JButton("Save");
 		savePaths.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-				//while(true) {
-					String fileName = (String)JOptionPane.showInputDialog(null, "Please enter a name for the report:", "Report File Name", JOptionPane.PLAIN_MESSAGE);
-					if ((fileName != null) && (fileName.length() > 0)) {
-						Write writeFile = new Write(pathInfo, fileName);
-						return;
-					}
-					else {
-						JOptionPane.showMessageDialog(null, "Please enter a valid file name.", "Input Error", JOptionPane.ERROR_MESSAGE);
-					}
-				//}
+				String fileName = (String)JOptionPane.showInputDialog(null, "Please enter a name for the report:", "Report File Name", JOptionPane.PLAIN_MESSAGE);
+				if ((fileName != null) && (fileName.length() > 0)) {
+					Write writeFile = new Write(pathInfo, fileName);
+					return;
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "Please enter a valid file name.", "Input Error", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		
-		resetTasks = new JButton("Reset");
-		resetTasks.addActionListener(new ActionListener() {
+		critical = new JButton("Critical");
+		critical.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
+				int i = 0;
+				System.out.print("event\n");
 				clearLabels();
-				tasks = 0;
-				paths = 0;
-				taskList = new ArrayList<Task>();
+				updateTasks();
+				criticalPaths();
 			}
 		});
+		
 		outputButtons.add(new JLabel(""));
 		outputButtons.add(processPaths);
 		outputButtons.add(new JLabel(""));
+		outputButtons.add(critical);
+		outputButtons.add(new JLabel(""));
 		outputButtons.add(savePaths);
 		outputButtons.add(new JLabel (""));
-		outputButtons.add(resetTasks);
-		outputButtons.add(new JLabel(""));
 		
 		processPanel.add(processTitle, BorderLayout.NORTH);
 		processPanel.add(scroll, BorderLayout.WEST);
@@ -159,6 +161,19 @@ public class AddPanel extends JPanel {
 		buttons.add(updateTask);
 		buttons.add(new JLabel(""));
 
+		resetTasks = new JButton("Reset");
+		resetTasks.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				clearLabels();
+				tasks = 0;
+				paths = 0;
+				taskList = new ArrayList<Task>();
+			}
+		});
+		
+		buttons.add(resetTasks);
+		buttons.add(new JLabel(""));
+		
 		createPanel.add(addTitle, BorderLayout.NORTH);
 		createPanel.add(labels, BorderLayout.WEST);
 		createPanel.add(fields, BorderLayout.EAST);
@@ -272,6 +287,36 @@ public class AddPanel extends JPanel {
 		allTasks.repaint();
 	}
 	
+	public void criticalPaths() {
+		PathBuilder pathBuild = new PathBuilder(taskList);
+		if (pathBuild.getCycle() == true) {
+			JOptionPane.showMessageDialog(null,  "A task dependency creates a cyclical path. Please revise input.", "Input Error", JOptionPane.ERROR_MESSAGE);
+		}
+		if (pathBuild.doesNotExist() == true) {
+			JOptionPane.showMessageDialog(null,  "One or more task has a dependency that does not exist.", "Input Error", JOptionPane.ERROR_MESSAGE);
+		}
+		if (pathBuild.getBroken() == true) {
+			JOptionPane.showMessageDialog(null,  "One or more paths are broken or incomplete.", "Input Error", JOptionPane.ERROR_MESSAGE);
+		}
+		paths = pathBuild.getPaths();
+		int i = 0;
+		int c = 0;
+		while (i < paths) {
+			if (i == 0 || pathBuild.getPath(i).getDuration() == criticalPathDur) {
+				criticalPathDur = pathBuild.getPath(i).getDuration();
+				JLabel criticalPath = new JLabel(pathBuild.getPath(i).toString());
+				pathLabels.add(criticalPath);
+				c++;
+			}
+			i++;
+		}
+		i = 0;
+		while (i < c) {
+			allPaths.add(pathLabels.get(i));
+			i++;
+		}
+	}
+	
 	public void updatePaths() {
 		pathInfo = "";
 		PathBuilder pathBuild = new PathBuilder(taskList);
@@ -285,19 +330,13 @@ public class AddPanel extends JPanel {
 			JOptionPane.showMessageDialog(null,  "One or more paths are broken or incomplete.", "Input Error", JOptionPane.ERROR_MESSAGE);
 		}
 		paths = pathBuild.getPaths();
+		pathList = pathBuild.getPathList();
+		criticalPathDur = pathList.get(0).getDuration();
 		int i = 0;
 		while (i < paths) {
-			if (i == 0 || pathBuild.getPath(i).getDuration() == criticalPathDur) {
-				criticalPathDur = pathBuild.getPath(i).getDuration();
-				JLabel criticalPath = new JLabel(pathBuild.getPath(i).toString() + " (Critical Path)");
-				pathLabels.add(criticalPath);
-				pathInfo += criticalPath.getText() + "\n";
-			}
-			else {
-				JLabel pathLabel = new JLabel(pathBuild.getPath(i).toString());
-				pathLabels.add(pathLabel);
-				pathInfo += pathLabel.getText() + "\n";
-			}
+			JLabel pathLabel = new JLabel(pathBuild.getPath(i).toString());
+			pathLabels.add(pathLabel);
+			pathInfo += pathLabel.getText() + "\n";
 			i++;
 		}
 		i = 0;
