@@ -71,7 +71,7 @@ public class AddPanel extends JPanel {
 		savePaths = new JButton("Save");
 		savePaths.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-				
+
 			}
 		});
 		
@@ -117,66 +117,7 @@ public class AddPanel extends JPanel {
 		addTask.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				Task currTask = new Task();
-				try {
-					String taskName = name.getText().trim();
-					String taskDep = dependencies.getText();
-					
-					if (taskName.length() == 0 || duration.getText().length() == 0) {
-						System.out.println("check");
-						Exception e = new Exception();
-						throw e;
-					}
-
-					int taskDur = Integer.parseInt(duration.getText());
-
-					if (taskDur <= 0 ) {
-						
-						NumberFormatException nfe = new NumberFormatException();
-						throw nfe;
-					}
-
-					else {
-						currTask.setName(taskName);
-						name.setText("");
-						currTask.setDuration(taskDur);
-						duration.setText("");
-						if (taskDep.length() != 0) {
-							StringTokenizer st = new StringTokenizer(taskDep, " ");
-							int dep = 1;
-							String[] deps = new String[15];
-							deps[0] = st.nextToken();
-							while(st.hasMoreTokens()) {
-								deps[dep] = st.nextToken().trim();
-								dep++;
-								
-							}
-							currTask.setDependencies(deps, dep);
-
-						}
-						dependencies.setText("");
-						int check = addTask(currTask);
-						if (check == 2) {
-							JOptionPane.showMessageDialog(null, "This task name already exists!", "Input Error", JOptionPane.ERROR_MESSAGE);
-						}
-						else if (check == 1){
-							errorMessage.setText("");
-						}
-					}
-				}
-				
-				catch(NumberFormatException nfe) {
-					JOptionPane.showMessageDialog(null, "Please enter a positive integer for Task Duration!", "Input Error", JOptionPane.ERROR_MESSAGE);
-					
-					duration.setText("");
-					dependencies.setText("");
-				}
-				
-				catch(Exception e) {
-					JOptionPane.showMessageDialog(null, "Please enter both Task Name and Duration!", "Input Error", JOptionPane.ERROR_MESSAGE);
-					name.setText("");
-					duration.setText("");
-					dependencies.setText("");
-				}
+				taskAttempt(currTask);
 			}
 		});
 		
@@ -186,7 +127,18 @@ public class AddPanel extends JPanel {
 		updateTask = new JButton("Update");
 		updateTask.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-				
+				int i = 0;
+				while (i < tasks) {
+					if (name.getText().equals(taskList.get(i).getName())) {
+						taskList.remove(i);
+						tasks--;
+						Task currentTask = new Task();
+						taskAttempt(currentTask);
+						updateTasks();
+						return;
+					}
+					i++;
+				}
 			}
 		});
 		
@@ -205,6 +157,69 @@ public class AddPanel extends JPanel {
 		
 		setLayout(new BorderLayout());
 		add(wholePanel, BorderLayout.WEST);
+	}
+	
+	public void taskAttempt(Task currTask) {
+		try {
+			String taskName = name.getText().trim();
+			String taskDep = dependencies.getText();
+			
+			if (taskName.length() == 0 || duration.getText().length() == 0) {
+				System.out.println("check");
+				Exception e = new Exception();
+				throw e;
+			}
+
+			int taskDur = Integer.parseInt(duration.getText());
+
+			if (taskDur <= 0 ) {
+				
+				NumberFormatException nfe = new NumberFormatException();
+				throw nfe;
+			}
+
+			else {
+				currTask.setName(taskName);
+				name.setText("");
+				currTask.setDuration(taskDur);
+				duration.setText("");
+				if (taskDep.length() != 0) {
+					StringTokenizer st = new StringTokenizer(taskDep, " ");
+					int dep = 1;
+					String[] deps = new String[15];
+					deps[0] = st.nextToken();
+					while(st.hasMoreTokens()) {
+						deps[dep] = st.nextToken().trim();
+						dep++;
+						
+					}
+					currTask.setDependencies(deps, dep);
+
+				}
+				dependencies.setText("");
+				int check = addTask(currTask);
+				if (check == 2) {
+					JOptionPane.showMessageDialog(null, "This task name already exists!", "Input Error", JOptionPane.ERROR_MESSAGE);
+				}
+				else if (check == 1){
+					errorMessage.setText("");
+				}
+			}
+		}
+		
+		catch(NumberFormatException nfe) {
+			JOptionPane.showMessageDialog(null, "Please enter a positive integer for Task Duration!", "Input Error", JOptionPane.ERROR_MESSAGE);
+			
+			duration.setText("");
+			dependencies.setText("");
+		}
+		
+		catch(Exception e) {
+			JOptionPane.showMessageDialog(null, "Please enter both Task Name and Duration!", "Input Error", JOptionPane.ERROR_MESSAGE);
+			name.setText("");
+			duration.setText("");
+			dependencies.setText("");
+		}
 	}
 	
 	public int addTask(Task currTask) {
