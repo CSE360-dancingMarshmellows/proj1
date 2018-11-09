@@ -17,7 +17,8 @@ public class AddPanel extends JPanel {
 	private int tasks;
 	private int paths;
 	private ArrayList<JLabel> pathLabels;
-	private ArrayList<JLabel> taskLabels;
+	private ArrayList<JRadioButton> taskLabels;
+	private ButtonGroup taskButtons;
 	private ArrayList<Task> taskList;
 
 	public AddPanel() {
@@ -25,7 +26,8 @@ public class AddPanel extends JPanel {
 		paths = 0;
 		taskList = new ArrayList<Task>();
 		pathLabels = new ArrayList<JLabel>();
-		taskLabels = new ArrayList<JLabel>();
+		taskLabels = new ArrayList<JRadioButton>();
+		taskButtons = new ButtonGroup();
 		
 		JPanel wholePanel = new JPanel(new BorderLayout());
 		
@@ -50,6 +52,7 @@ public class AddPanel extends JPanel {
 		allTasks = new JPanel();
 		allTasks.setLayout(new BoxLayout(allTasks, BoxLayout.Y_AXIS));
 		allTasks.add(new JLabel("Tasks:"));
+		//allTasks.add(taskButtons);
 		pathTasks = new JPanel();
 		pathTasks.setLayout(new BoxLayout(pathTasks, BoxLayout.Y_AXIS));
 		JScrollPane scroll = new JScrollPane(allPaths);
@@ -226,10 +229,13 @@ public class AddPanel extends JPanel {
 
 	public void updateTasks() {
 		int i = 0;
+		taskButtons = new ButtonGroup();
+		
 		while (i < tasks) {
 			String taskString = taskList.get(i).toString();
-			JLabel taskLabel = new JLabel(taskString);
+			JRadioButton taskLabel = new JRadioButton(taskString);
 			taskLabels.add(taskLabel);
+			taskButtons.add(taskLabel);
 			i++;
 		}
 		i = 0;
@@ -274,10 +280,11 @@ public class AddPanel extends JPanel {
 		i = 0;
 		while (i < taskLabels.size()) {
 			allTasks.remove(taskLabels.get(i));
+			taskButtons.remove(taskLabels.get(i));
 			i++;
 		}
 		pathLabels = new ArrayList<JLabel>();
-		taskLabels = new ArrayList<JLabel>();
+		taskLabels = new ArrayList<JRadioButton>();
 		allPaths.revalidate();
 		allTasks.revalidate();
 		allPaths.repaint();
