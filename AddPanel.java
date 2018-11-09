@@ -92,7 +92,6 @@ public class AddPanel extends JPanel {
 		critical.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				int i = 0;
-				System.out.print("event\n");
 				clearLabels();
 				updateTasks();
 				criticalPaths();
