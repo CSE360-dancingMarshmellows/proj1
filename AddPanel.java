@@ -8,12 +8,25 @@ import java.lang.*;
 
 public class AddPanel extends JPanel {
 	private JButton addTask, processPaths, savePaths, resetTasks, updateTask;
-	private ViewPanel viewPanel;
 	private JLabel errorMessage;
 	private JTextField name, duration, dependencies;
+	private JPanel allPaths;
+	private JPanel allTasks;
+	private JPanel pathTasks;
+	private JPanel viewPaths;
+	private int tasks;
+	private int paths;
+	private ArrayList<JLabel> pathLabels;
+	private ArrayList<JLabel> taskLabels;
+	private ArrayList<Task> taskList;
 
-	public AddPanel(ViewPanel viewPanel) {
-		this.viewPanel = viewPanel;
+	public AddPanel() {
+		tasks = 0;
+		paths = 0;
+		taskList = new ArrayList<Task>();
+		pathLabels = new ArrayList<JLabel>();
+		taskLabels = new ArrayList<JLabel>();
+		
 		JPanel wholePanel = new JPanel(new BorderLayout());
 		
 		JPanel createPanel = new JPanel(new BorderLayout());
@@ -31,14 +44,44 @@ public class AddPanel extends JPanel {
 		JPanel processTitle = new JPanel(new GridLayout(2, 1));
 		processTitle.add(new JLabel("Process and Save Paths"));
 		
-		JPanel taskOutput = new JPanel(new GridLayout(10, 1));
-		taskOutput.add(new JLabel("Tasks:"));
-		JPanel pathOutput = new JPanel(new GridLayout(10, 1));
-		pathOutput.add(new JLabel("Paths:"));
-		JPanel outputButtons = new JPanel(new GridLayout(1, 5));
+		allPaths = new JPanel();
+		allPaths.setLayout(new BoxLayout(allPaths, BoxLayout.Y_AXIS));
+		allPaths.add(new JLabel("Paths:"));
+		allTasks = new JPanel();
+		allTasks.setLayout(new BoxLayout(allTasks, BoxLayout.Y_AXIS));
+		allTasks.add(new JLabel("Tasks:"));
+		pathTasks = new JPanel();
+		pathTasks.setLayout(new BoxLayout(pathTasks, BoxLayout.Y_AXIS));
+		JScrollPane scroll = new JScrollPane(allPaths);
+		JScrollPane scroll2 = new JScrollPane(allTasks);
+		
+		JPanel outputButtons = new JPanel(new GridLayout(1,1));
+		
 		processPaths = new JButton("Process");
+		processPaths.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				updatePaths();
+				pathTasks.revalidate();
+				pathTasks.repaint();
+			}
+		});
+		
 		savePaths = new JButton("Save");
+		savePaths.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				
+			}
+		});
+		
 		resetTasks = new JButton("Reset");
+		resetTasks.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				clearLabels();
+				tasks = 0;
+				paths = 0;
+				taskList = new ArrayList<Task>();
+			}
+		});
 		outputButtons.add(new JLabel(""));
 		outputButtons.add(processPaths);
 		outputButtons.add(new JLabel(""));
@@ -48,8 +91,8 @@ public class AddPanel extends JPanel {
 		outputButtons.add(new JLabel(""));
 		
 		processPanel.add(processTitle, BorderLayout.NORTH);
-		processPanel.add(taskOutput, BorderLayout.WEST);
-		processPanel.add(pathOutput, BorderLayout.EAST);
+		processPanel.add(scroll, BorderLayout.WEST);
+		processPanel.add(scroll2, BorderLayout.EAST);
 		processPanel.add(outputButtons, BorderLayout.SOUTH);
 		
 		JPanel fields = new JPanel(new GridLayout(8,1));
@@ -67,14 +110,87 @@ public class AddPanel extends JPanel {
 		fields.add(dependencies);
 
 		JPanel buttons = new JPanel(new GridLayout(1, 1));
+		
 		addTask = new JButton("Add Task");
+		addTask.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				Task currTask = new Task();
+				try {
+					String taskName = name.getText().trim();
+					String taskDep = dependencies.getText();
+					
+					if (taskName.length() == 0 || duration.getText().length() == 0) {
+						System.out.println("check");
+						Exception e = new Exception();
+						throw e;
+					}
+
+					int taskDur = Integer.parseInt(duration.getText());
+
+					if (taskDur <= 0 ) {
+						
+						NumberFormatException nfe = new NumberFormatException();
+						throw nfe;
+					}
+
+					else {
+						currTask.setName(taskName);
+						name.setText("");
+						currTask.setDuration(taskDur);
+						duration.setText("");
+						if (taskDep.length() != 0) {
+							StringTokenizer st = new StringTokenizer(taskDep, " ");
+							int dep = 1;
+							String[] deps = new String[15];
+							deps[0] = st.nextToken();
+							while(st.hasMoreTokens()) {
+								deps[dep] = st.nextToken().trim();
+								dep++;
+								
+							}
+							currTask.setDependencies(deps, dep);
+
+						}
+						dependencies.setText("");
+						int check = addTask(currTask);
+						if (check == 2) {
+							JOptionPane.showMessageDialog(null, "This task name already exists!", "Input Error", JOptionPane.ERROR_MESSAGE);
+						}
+						else if (check == 1){
+							errorMessage.setText("");
+						}
+					}
+				}
+				
+				catch(NumberFormatException nfe) {
+					JOptionPane.showMessageDialog(null, "Please enter a positive integer for Task Duration!", "Input Error", JOptionPane.ERROR_MESSAGE);
+					
+					duration.setText("");
+					dependencies.setText("");
+				}
+				
+				catch(Exception e) {
+					JOptionPane.showMessageDialog(null, "Please enter both Task Name and Duration!", "Input Error", JOptionPane.ERROR_MESSAGE);
+					name.setText("");
+					duration.setText("");
+					dependencies.setText("");
+				}
+			}
+		});
+		
 		buttons.add(new JLabel(""));
 		buttons.add(addTask);
+		
 		updateTask = new JButton("Update");
+		updateTask.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent event) {
+				
+			}
+		});
+		
 		buttons.add(new JLabel(""));
 		buttons.add(updateTask);
 		buttons.add(new JLabel(""));
-		addTask.addActionListener(new ButtonListener());
 
 		createPanel.add(addTitle, BorderLayout.NORTH);
 		createPanel.add(labels, BorderLayout.WEST);
@@ -88,70 +204,98 @@ public class AddPanel extends JPanel {
 		setLayout(new BorderLayout());
 		add(wholePanel, BorderLayout.WEST);
 	}
-
-private class ButtonListener implements ActionListener {
-	public void actionPerformed(ActionEvent event) {
-		Task currTask = new Task();
-		try {
-			String taskName = name.getText().trim();
-			String taskDep = dependencies.getText();
-			
-			if (taskName.length() == 0 || duration.getText().length() == 0) {
-				System.out.println("check");
-				Exception e = new Exception();
-				throw e;
+	
+	public int addTask(Task currTask) {
+		int i = 0;
+		while (i < tasks) {
+			String currName = currTask.getName();
+			String name = taskList.get(i).getName();
+			if (currName.equals(name)) {
+				return 2;
 			}
-
-			int taskDur = Integer.parseInt(duration.getText());
-
-			if (taskDur <= 0 ) {
-				
-				NumberFormatException nfe = new NumberFormatException();
-				throw nfe;
-			}
-
-			else {
-				currTask.setName(taskName);
-				name.setText("");
-				currTask.setDuration(taskDur);
-				duration.setText("");
-				if (taskDep.length() != 0) {
-					StringTokenizer st = new StringTokenizer(taskDep, " ");
-					int dep = 1;
-					String[] deps = new String[15];
-					deps[0] = st.nextToken();
-					while(st.hasMoreTokens()) {
-						deps[dep] = st.nextToken().trim();
-						dep++;
-						
-					}
-					currTask.setDependencies(deps, dep);
-
-				}
-				dependencies.setText("");
-				int check = viewPanel.addTask(currTask);
-				if (check == 2) {
-					JOptionPane.showMessageDialog(null, "This task name already exists!", "Input Error", JOptionPane.ERROR_MESSAGE);
-				}
-				else if (check == 1){
-					errorMessage.setText("");
-				}
-			}
+			i++;
 		}
-		
-		catch(NumberFormatException nfe) {
-			JOptionPane.showMessageDialog(null, "Please enter a positive integer for Task Duration!", "Input Error", JOptionPane.ERROR_MESSAGE);
-			
-			duration.setText("");
-			dependencies.setText("");
+		taskList.add(currTask);
+		System.out.print("Successful");
+		tasks++;
+		sortTasks();
+		clearLabels();		
+		updateTasks();
+		return 1;
+	}
+
+	public void updateTasks() {
+		int i = 0;
+		while (i < tasks) {
+			String taskString = taskList.get(i).toString();
+			JLabel taskLabel = new JLabel(taskString);
+			taskLabels.add(taskLabel);
+			i++;
 		}
-		
-		catch(Exception e) {
-			JOptionPane.showMessageDialog(null, "Please enter both Task Name and Duration!", "Input Error", JOptionPane.ERROR_MESSAGE);
-			name.setText("");
-			duration.setText("");
-			dependencies.setText("");
+		i = 0;
+		while (i < tasks) {
+			allTasks.add(taskLabels.get(i));
+			i++;
+		}
+		allTasks.repaint();
+	}
+	
+	public void updatePaths() {
+		PathBuilder pathBuild = new PathBuilder(taskList);
+		if (pathBuild.getCycle() == true) {
+			JOptionPane.showMessageDialog(null,  "A task dependency creates a cyclical path. Please revise input.", "Input Error", JOptionPane.ERROR_MESSAGE);
+		}
+		if (pathBuild.doesNotExist() == true) {
+			JOptionPane.showMessageDialog(null,  "One or more task has a dependency that does not exist.", "Input Error", JOptionPane.ERROR_MESSAGE);
+		}
+		if (pathBuild.getBroken() == true) {
+			JOptionPane.showMessageDialog(null,  "One or more paths are broken or incomplete.", "Input Error", JOptionPane.ERROR_MESSAGE);
+		}
+		paths = pathBuild.getPaths();
+		int i = 0;
+		while (i < paths) {
+			JLabel pathLabel = new JLabel(pathBuild.getPath(i).toString());
+			pathLabels.add(pathLabel);
+			i++;
+		}
+		i = 0;
+		while (i < paths) {
+			allPaths.add(pathLabels.get(i));
+			i++;
 		}
 	}
-}
+	
+	public void clearLabels() {
+		int i = 0;
+		while (i < pathLabels.size()) {
+			allPaths.remove(pathLabels.get(i));
+			i++;
+		}
+		i = 0;
+		while (i < taskLabels.size()) {
+			allTasks.remove(taskLabels.get(i));
+			i++;
+		}
+		pathLabels = new ArrayList<JLabel>();
+		taskLabels = new ArrayList<JLabel>();
+		allPaths.revalidate();
+		allTasks.revalidate();
+		allPaths.repaint();
+		allTasks.repaint();
+	}
+	
+	public void sortTasks() {
+		int n = tasks;
+		int i = 1;
+		while (i < n) {
+			Task key = taskList.get(i);
+			int j = i-1;
+			while (j >= 0 && taskList.get(j).getDuration() < key.getDuration()) {
+				taskList.set(j+1, taskList.get(j));
+				j--;
+			}
+			taskList.set(j+1, key);
+			i++;
+		}
+	}
 }
