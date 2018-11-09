@@ -20,10 +20,12 @@ public class AddPanel extends JPanel {
 	private ArrayList<JRadioButton> taskLabels;
 	private ButtonGroup taskButtons;
 	private ArrayList<Task> taskList;
+	private int criticalPathDur;
 
 	public AddPanel() {
 		tasks = 0;
 		paths = 0;
+		criticalPathDur = 0;
 		taskList = new ArrayList<Task>();
 		pathLabels = new ArrayList<JLabel>();
 		taskLabels = new ArrayList<JRadioButton>();
@@ -275,8 +277,15 @@ public class AddPanel extends JPanel {
 		paths = pathBuild.getPaths();
 		int i = 0;
 		while (i < paths) {
-			JLabel pathLabel = new JLabel(pathBuild.getPath(i).toString());
-			pathLabels.add(pathLabel);
+			if (i == 0 || pathBuild.getPath(i).getDuration() == criticalPathDur) {
+				criticalPathDur = pathBuild.getPath(i).getDuration();
+				JLabel criticalPath = new JLabel(pathBuild.getPath(i).toString() + " (Critical Path)");
+				pathLabels.add(criticalPath);
+			}
+			else {
+				JLabel pathLabel = new JLabel(pathBuild.getPath(i).toString());
+				pathLabels.add(pathLabel);
+			}
 			i++;
 		}
 		i = 0;
