@@ -388,7 +388,7 @@ public class AddPanel extends JPanel {
 				if (source.equals(taskLabels.get(i))) {
 					name.setText(taskList.get(i).getName());
 					duration.setText(Integer.toString(taskList.get(i).getDuration()));
-					dependencies.setText(taskList.get(i).depToString());
+					dependencies.setText(taskList.get(i).depToString()); // is this line correct?? bc i get an error on depToString() 
 					return;
 				}
 				i++;
