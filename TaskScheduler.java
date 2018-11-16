@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class TaskScheduler extends JApplet {
 	
-	private int APPLET_WIDTH = 1400, APPLET_HEIGHT = 300;
+	private int APPLET_WIDTH = 1200, APPLET_HEIGHT = 300;
 
 	private JTabbedPane tPane;
 	private AddPanel addPanel;
