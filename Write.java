@@ -1,5 +1,5 @@
 // CSE 360 Fall 2018
-package old;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
