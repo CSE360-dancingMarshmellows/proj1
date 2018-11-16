@@ -12,7 +12,7 @@ import java.time.format.DateTimeFormatter;
 public class Write {
 	
 	public Write(ArrayList<String> pathInfo, ArrayList<String> taskInfo, String fileName, int paths, int tasks) {
-		File file = new File("C:\\Users\\Sarah Bulle\\Desktop\\" + fileName + ".txt");
+		File file = new File("fileName + ".txt");
 		FileWriter fr = null;
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 		LocalDateTime current = LocalDateTime.now();
