@@ -12,13 +12,13 @@ import java.time.format.DateTimeFormatter;
 public class Write {
 	
 	public Write(ArrayList<String> pathInfo, ArrayList<String> taskInfo, String fileName, int paths, int tasks) {
-		File file = new File("fileName + ".txt");
+		File file = new File(fileName + ".txt");
 		FileWriter fr = null;
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 		LocalDateTime current = LocalDateTime.now();
 		try {
 			fr = new FileWriter(file);
-			fr.write("Task Scheduler Report:");
+			fr.write("Task Scheduler Report " + fileName + ":");
 			fr.write(System.getProperty("line.separator"));
 			fr.write("Date and time of Creation: " + formatter.format(current));
 			fr.write(System.getProperty("line.separator"));
