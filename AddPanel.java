@@ -22,13 +22,15 @@ public class AddPanel extends JPanel {
 	private ArrayList<Task> taskList;
 	private ArrayList<Path> pathList;
 	private int criticalPathDur;
-	private String pathInfo;
+	private ArrayList<String> pathInfo;
+	private ArrayList<String> taskInfo;
 
 	public AddPanel() {
 		tasks = 0;
 		paths = 0;
 		criticalPathDur = 0;
-		pathInfo = "";
+		pathInfo = new ArrayList<String>();
+		taskInfo = new ArrayList<String>();
 		taskList = new ArrayList<Task>();
 		pathList = new ArrayList<Path>();
 		pathLabels = new ArrayList<JLabel>();
@@ -79,7 +81,12 @@ public class AddPanel extends JPanel {
 			public void actionPerformed(ActionEvent event) {
 				String fileName = (String)JOptionPane.showInputDialog(null, "Please enter a name for the report:", "Report File Name", JOptionPane.PLAIN_MESSAGE);
 				if ((fileName != null) && (fileName.length() > 0)) {
-					Write writeFile = new Write(pathInfo, fileName);
+					int i = 0;
+					while (i < tasks) {
+						taskInfo.add(taskList.get(i).toString());
+						i++;
+					}
+					Write writeFile = new Write(pathInfo, taskInfo, fileName, tasks, paths);
 					return;
 				}
 				else {
@@ -317,7 +324,7 @@ public class AddPanel extends JPanel {
 	}
 	
 	public void updatePaths() {
-		pathInfo = "";
+		pathInfo = new ArrayList<String>();
 		PathBuilder pathBuild = new PathBuilder(taskList);
 		if (pathBuild.getCycle() == true) {
 			JOptionPane.showMessageDialog(null,  "A task dependency creates a cyclical path. Please revise input.", "Input Error", JOptionPane.ERROR_MESSAGE);
@@ -330,12 +337,14 @@ public class AddPanel extends JPanel {
 		}
 		paths = pathBuild.getPaths();
 		pathList = pathBuild.getPathList();
-		criticalPathDur = pathList.get(0).getDuration();
+		if (pathList.size() > 0) {
+			criticalPathDur = pathList.get(0).getDuration();
+		}
 		int i = 0;
 		while (i < paths) {
 			JLabel pathLabel = new JLabel(pathBuild.getPath(i).toString());
 			pathLabels.add(pathLabel);
-			pathInfo += pathLabel.getText() + "\n";
+			pathInfo.add(pathLabel.getText());
 			i++;
 		}
 		i = 0;
@@ -371,7 +380,7 @@ public class AddPanel extends JPanel {
 		while (i < n) {
 			Task key = taskList.get(i);
 			int j = i-1;
-			while (j >= 0 && taskList.get(j).getDuration() < key.getDuration()) {
+			while (j >= 0 && taskList.get(j).getName().compareTo(key.getName()) >= 0) {
 				taskList.set(j+1, taskList.get(j));
 				j--;
 			}
@@ -388,7 +397,7 @@ public class AddPanel extends JPanel {
 				if (source.equals(taskLabels.get(i))) {
 					name.setText(taskList.get(i).getName());
 					duration.setText(Integer.toString(taskList.get(i).getDuration()));
-					dependencies.setText(taskList.get(i).depToString()); // is this line correct?? bc i get an error on depToString() 
+					dependencies.setText(taskList.get(i).depToString());
 					return;
 				}
 				i++;
