@@ -56,4 +56,14 @@ public class Task {
 		String result = "Task Name: " + name + "     " + "Task Duration: " + Integer.toString(duration) + "     " + "Task Dependencies: " + dep; 
 		return result;
 	}
+	
+	public String depToString() {
+		int i = 0;
+		String dep = "";
+		while (i < dependency) {
+			dep = dep + dependencies[i] + " "; 
+			i++;
+		}
+		return dep;
+	}
 }
