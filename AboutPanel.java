@@ -1,3 +1,4 @@
+// CSE 360 Fall 2018
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -20,7 +21,8 @@ public class AboutPanel extends JPanel{
 		str += "   This program is designed to help in the process of task scheduling. The program works by taking several tasks, their duration \n"
 				+ "(which must be an integer) and the possible dependencies of each task as input. It then creates an array of structures for each \n"
 				+ "path containing task names, duration, and dependencies and sorts the paths in decreasing order with respect to their duration. \n"
-				+ "Each path will then be printed as output with the involved task names and its duration time formatted for users to easily read. \n\n" + 
+				+ "Each path will then be printed as output with the involved task names and its duration time formatted for users to easily read. \n"
+				+ "Once tasks have been added, the user may select and update them at any time or save all displayed information in a report file.\n\n" + 
 				"   This program will be able to handle input errors such as incorrect input types, missing input types, or anything else that may \n"
 				+ "arise, and the program will wait to process the input data until all of the information has been received. An assumption is made for \n"
 				+ "this phase of the program that any starting task, or tasks, will not have dependencies. \n\n";
