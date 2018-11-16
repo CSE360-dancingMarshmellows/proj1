@@ -33,14 +33,6 @@ public class Path {
 		return tasks.size();
 	}
 	
-	public void setTaskList(ArrayList <String> soFar) {
-		tasks = soFar;
-	}
-	
-	public ArrayList<String> getTaskList() {
-		return tasks;
-	}
-	
 	public void setLength(int length) {
 		this.length = length;
 	}
